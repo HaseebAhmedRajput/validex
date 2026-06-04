@@ -1,0 +1,61 @@
+1. user will come and registered with thier role -> student , admin , teacher 
+2. data will be stored in redis and send the opt to the user
+3. frontedn wil send the otp to the  backend if corrected  then create the user
+4.once the user is created they have the access according to thier role, succh as student can join the test and the teacher can create test, and check the  record of thier test
+5. if a user not used its account for one day then he has to login again
+
+
+START TEST PROCESS
+1. teacher will craete the test, each test has a testCode , student can join the test using thier emails and test code ,
+2. the test can be joined once, with the allocated area,  test will
+3. test can only be start if the api is called from the desktop app
+4. the frontend will use the mediapipe for the  ai detection and send the user log per threee sec , if a user  break any validation then 10 marks will be deducted! 
+
+
+  {
+   "title":"algera",
+   "subjectCode": "itc-505",
+"duration": 21134,
+"testCode": 21424,
+  "allowedLocation": {"lat":121,
+  "lng":1121},
+  "startTime": "2026-05-16T14:30:00Z",
+  "endTime":112131,
+  "mcqs": [{
+      "questionText":"njDJsdsvHDD",
+      "options": ["hey", "testing","done","run"],
+      "correctOption": 2,
+      "marks":2 
+  },{
+      "questionText":"njDJHDD",
+      "options": ["hey", "testing","done","run"],
+      "correctOption": 2,
+      "marks":2 
+  }],
+  "questions":[ "question1","question2"]
+  ,
+  "totalMarks":100
+   } 
+    
+
+
+
+iew attempts
+
+❌ You NEED:
+🔥 MUST-HAVE
+
+❌ submit test API
+❌ save answers API
+❌ create attempt on join
+
+⚠️ IMPORTANT
+
+❌ timer enforcement
+❌ prevent re-attempt properly
+
+🚨 PROCTORING (for your app goal)
+
+❌ tab switch detection
+❌ activity logs API
+❌ cheating detection logic

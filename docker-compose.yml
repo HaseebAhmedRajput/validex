@@ -1,0 +1,11 @@
+# Backend
+services:
+  my-redis:
+    image: redis/redis-stack:latest
+    ports: 
+      - "6379:6379"  #redis  port 
+      - "8001:8001"
+    volumes:
+      - redis_data:/data
+volumes:
+  redis_data:            
