@@ -104,40 +104,50 @@ const createTest = AsyncHandler(
 );
 
 
-
 const getTestsByTeacher = AsyncHandler(async(req:any,res:Response,next:NextFunction)=>{
-  let {_id}= req.user
+  let {_id, role}= req.user 
+   if(role === "admin" || role === "superAdmin"){
+    _id= req.params?.teacherId || _id
+   }
+
+ 
   let page = Number(req.query?.page) || 1 
   page=Math.max(1,page)
   let limit= 10;
   let skip = (page- 1)* limit
 
-   const testList= await Test.find({createdBy:_id}).sort({createdAt:-1}).skip(skip).limit(limit).select("_id title testCode")
+   const testList= await Test.find({createdBy:_id}).sort({createdAt:-1}).skip(skip).limit(limit).select("_id title testCode").lean()
    if(testList.length===0){ throw new ApiError(500,"No  test found")}
      res.status(200).json(new ApiResponse(200,testList,"Succesfully fetched the top newest tests  "))
    }
 )
 
 
-
 const  getTestDetails = AsyncHandler(async(req:any,res:Response,next:NextFunction)=>{
   let {testId} = req.params ;
+  let {role,_id}= req.user
+
   if(!testId){ throw new ApiError(401,"can not find the test id")}
   
-  const testDetails= await Test.findById({_id:testId}).populate("questions")
+  const testDetails= await Test.findById({_id:testId}).populate("questions").lean()
   if(!testDetails){
     throw new ApiError(500,"No record found!")
   }
+ 
+  // teacher ownership check
+  if (role === "teacher" && testDetails.createdBy.toString() !== _id.toString()) {
+    throw new ApiError(403, "Access denied")
+  }
+
 
   res.status(200).json(new ApiResponse(200,testDetails,"Sucessfully fetched the test details"))
 })
 
 
-
 const seeTotalAttendees = AsyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
   let {testId} = req.params 
   if(!testId){ throw new ApiError(400,"Test ID not found")}
-  let studentList= await Attempt.find({testId}).populate("studentId", "name email").select("studentId")
+  let studentList= await Attempt.find({testId}).populate("studentId", "name email").select("studentId").lean()
   console.log(studentList);
 
   res.status(200).json(new ApiResponse(200,studentList,"Successfully fecthed all students"))
@@ -150,6 +160,6 @@ const seeTotalAttendees = AsyncHandler(async(req:Request,res:Response,next:NextF
 // see all created test  ✔️
 // see specific test details✔️
 // see all student who attempt the test ✔️
-// see specific student attempted test
+// see specific student attempted test 
 
 export { createTest,getTestsByTeacher ,getTestDetails, seeTotalAttendees};

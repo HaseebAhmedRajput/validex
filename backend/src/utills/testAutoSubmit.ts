@@ -43,7 +43,7 @@ export const initAutoSubmitWorker = async () => {
       await client.del(key);
     } catch (error: any) {
       console.error(
-        "❌ Fatal background operation failure inside change-stream wrapper:",
+        " Fatal background operation failure inside change-stream wrapper:",
         error.message,
       );
     }

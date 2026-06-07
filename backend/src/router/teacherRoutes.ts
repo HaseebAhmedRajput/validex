@@ -10,9 +10,9 @@ let router = Router()
 router.route("/createTest").post(isUserLoggedIn,allowedRoles("admin","teacher"),validateScehma(testSchema),createTest)
 
 //we have to check thr api by giving the query parameter
-router.route("/getAllTests").get(isUserLoggedIn,allowedRoles("admin","teacher"),getTestsByTeacher)
-router.route("/seeAllAttendees/:testId").get(isUserLoggedIn,allowedRoles("admin","teacher"),seeTotalAttendees)
-router.route("/getTestDetails/:testId").get(isUserLoggedIn,allowedRoles("admin","teacher"),getTestDetails)
+router.route("/getAllTests").get(isUserLoggedIn,allowedRoles("admin","teacher","superAdmin"),getTestsByTeacher)
+router.route("/seeAllAttendees/:testId").get(isUserLoggedIn,allowedRoles("admin","teacher","superAdmin"),seeTotalAttendees)
+router.route("/getTestDetails/:testId").get(isUserLoggedIn,allowedRoles("admin","teacher","superAdmin"),getTestDetails)
 
 
 

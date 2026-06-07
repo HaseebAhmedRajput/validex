@@ -9,11 +9,12 @@ import { sendMail } from "../utills/resendMailSend.js";
 import crypto from "crypto";
 import { Attempt } from "../models/testAttemptModel.js";
 import { Test } from "../models/testModel.js";
-import { Question } from "../models/questionModel.js";
-import { getMarks } from "../utills/geminiApi.js";
-import type { attemptType } from "../schemas/testAttemptScehma.js";
+// import { Question } from "../models/questionModel.js";
+// import { getMarks } from "../utills/geminiApi.js";
+// import type { attemptType } from "../schemas/testAttemptScehma.js";
 import { testSubmitHandler } from "../utills/processTest.js";
 import { LiveTimer } from "../models/liveTimerModel.js";
+import { getDistance } from "../utills/locationHandler.js";
 
 
 const registerUser = AsyncHandler(async (req: Request, res: Response) => {
@@ -21,7 +22,7 @@ const registerUser = AsyncHandler(async (req: Request, res: Response) => {
   const { fullname, email, password, department, role, number, batch, regNo } =
     validatedData;
 
-  const existedUser = await User.findOne({ email });
+  const existedUser = await User.findOne({ email }).lean();
   if (existedUser) throw new ApiError(400, "User Already Exist");
 
   const otp = crypto.randomInt(10000, 99999);
@@ -74,7 +75,7 @@ const joinTest = AsyncHandler(
     if (!lat || !lng || lat == null || lng == null) {
       throw new ApiError(400, "location is must required");
     }
-    let test = await Test.findOne({ testCode });
+    let test = await Test.findOne({ testCode }).lean();
     if (!test) {
       throw new ApiError(404, "No test found with this test code");
     }
@@ -82,7 +83,7 @@ const joinTest = AsyncHandler(
     let isAttempt = await Attempt.findOne({
       testId: test._id,
       studentId: _id,
-    });
+    }).lean();
 
     if (isAttempt) {
       throw new ApiError(
@@ -104,50 +105,7 @@ if (test.endTime && now > test.endTime.getTime()) {
     
     
 
-// 3. Convert stored DB dates to absolute Unix Milliseconds
-// const nowMs = Date.now(); 
-  // const startTimeMs = Date.parse(test.startTime.toString());
-  // const endTimeMs = Date.parse(test.endTime.toString());
 
-  // console.log(`[TIME CHECK] Current: ${nowMs} | Start: ${startTimeMs} | End: ${endTimeMs}`);
-
-  // // 4. Comparison Logic
-  // if (nowMs < startTimeMs) {
-  //   // Current time start time se peeche hai, yani abhi shuru nahi hua
-  //   throw new ApiError(403, "Test has not started yet");
-  // }
-
-  // if (nowMs > endTimeMs) {
-  //   // Current time end time ko cross kar chuka hai
-  //   throw new ApiError(403, "Test has ended");
-  // }
-
-
-
-
-
-
-    //Haversine formula to check the area of test allowed
-    function getDistance(
-      lat1: number,
-      lon1: number,
-      lat2: number,
-      lon2: number,
-    ) {
-      const R = 6371e3; // meters
-      const φ1 = (lat1 * Math.PI) / 180;
-      const φ2 = (lat2 * Math.PI) / 180;
-      const Δφ = ((lat2 - lat1) * Math.PI) / 180;
-      const Δλ = ((lon2 - lon1) * Math.PI) / 180;
-
-      const a =
-        Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-        Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-      return R * c;
-    }
 
     if (test.allowedLocation) {
       const distance = getDistance(
@@ -193,7 +151,7 @@ const getJoinedTests = AsyncHandler(async (req: any, res: Response) => {
   let { _id } = req.user;
   let testRecord: any = await Attempt.find({ studentId: _id })
     .populate("testId", "title subjectCode")
-    .select("obtainedMarks testId startTime endTime");
+    .select("obtainedMarks testId startTime endTime").lean();
 
   if (!testRecord || testRecord.length === 0) {
     res

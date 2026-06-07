@@ -6,7 +6,7 @@ fullname: z.string().min(2, "Name must be atleast more then two characters").tra
     email:z.string().email("Invalid Email Address"),
     number:z.number().int("Number must be legal and positive "),
     password:z.string().min(8, "Password must be more then Eight Characters"),
-    role:z.enum(["student","teacher","admin"]),
+    role:z.enum(["student","teacher"]),
     department: z.string().min(1,"Department Is compulsory"),
     batch:z.string().optional(),
     regNo :z.string().optional(),

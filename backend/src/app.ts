@@ -14,15 +14,18 @@ app.use(express.urlencoded({extended:true,limit:"16kb"}))
 
 
 //Declaring Routes for controllers
-import userRoutes from "./router/userRoutes.js"
+import userRouter from "./router/userRoutes.js"
 import authRouter from "./router/authRouter.js"
 import teacherRouter from "./router/teacherRoutes.js"
+import adminRouter from "./router/adminRoutes.js"
+
+
 
 //Routing api calls
-app.use("/users/",userRoutes)
-app.use("/users/auth",authRouter)
-app.use("/teacher",teacherRouter)
-
+app.use("api/v1/users/",userRouter)
+app.use("api/v1/users/auth",authRouter)
+app.use("api/v1/teacher",teacherRouter)
+app.use("api/v1/admin",adminRouter)
 
 
 

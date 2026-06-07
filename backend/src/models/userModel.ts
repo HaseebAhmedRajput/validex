@@ -9,7 +9,21 @@ import type { userType } from "../schemas/signUpSchema.js"; // type we have defi
 
 
 
-export interface Iuser extends userType, Document {
+export interface Iuser extends  Document {
+     fullname: string,
+         email:string
+         number:number,
+         password:string,
+         role: "student" | "teacher"|"admin"|"superAdmin",
+         department:string,
+         batch:string,
+         regNo: string ,
+         isUserVerified:boolean,
+         isLoggedIn:boolean,
+         refreshToken: string,
+
+
+
   
     //Methods that can be used in  user actions
     isCorrectPassword(password:string):  Promise<boolean>;
@@ -41,7 +55,7 @@ const UserSchema = new Schema<Iuser>({
     regNo: {type:String, unique: true},
     role: {
         type: String,
-        enum: ["student","teacher", "admin"],
+        enum: ["student","teacher", "admin","superAdmin"],
         default: "student"
     },
     department:{type :String, required: true},
