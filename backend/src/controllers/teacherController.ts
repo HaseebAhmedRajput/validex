@@ -116,7 +116,7 @@ const getTestsByTeacher = AsyncHandler(async(req:any,res:Response,next:NextFunct
   let limit= 10;
   let skip = (page- 1)* limit
 
-   const testList= await Test.find({createdBy:_id}).sort({createdAt:-1}).skip(skip).limit(limit).select("_id title testCode").lean()
+   const testList= await Test.find({createdBy:_id}).sort({createdAt:-1}).skip(skip).limit(limit).select("_id title testCode startTime endTime").lean()
    if(testList.length===0){ throw new ApiError(500,"No  test found")}
      res.status(200).json(new ApiResponse(200,testList,"Succesfully fetched the top newest tests  "))
    }
@@ -148,7 +148,7 @@ const seeTotalAttendees = AsyncHandler(async(req:Request,res:Response,next:NextF
   let {testId} = req.params 
   if(!testId){ throw new ApiError(400,"Test ID not found")}
   let studentList= await Attempt.find({testId}).populate("studentId", "name email").select("studentId").lean()
-  console.log(studentList);
+ 
 
   res.status(200).json(new ApiResponse(200,studentList,"Successfully fecthed all students"))
   

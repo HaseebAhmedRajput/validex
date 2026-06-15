@@ -29,6 +29,9 @@ const createUser = AsyncHandler(
     }
 
     let { fullname, regNo, batch, number, department, role, password } = user;
+       if(regNo=== null || regNo=== undefined || regNo===""){
+        regNo= undefined
+       }
 
     let verificationStatus = role === "student" ? true : false;
 
@@ -36,6 +39,7 @@ const createUser = AsyncHandler(
       fullname,
       email,
       password,
+      regNo,
       batch,
       number: Number(number),
       department,
@@ -103,14 +107,14 @@ const loginUser = AsyncHandler(
     }
 
     let key = `user:${email}`;
-    let redisUser = await client.hgetall(key); // check if user is already logged in so dont call the db
+    // let redisUser = await client.hgetall(key); // check if user is already logged in so dont call the db
 
-    if (redisUser.isLoggedIn == "true") {
-      throw new ApiError(
-        404,
-        "loggin Denied As you are already Logged In some Other device",
-      );
-    }
+    // if (redisUser.isLoggedIn == "true") {
+    //   throw new ApiError(
+    //     404,
+    //     "loggin Denied As you are already Logged In some Other device",
+    //   );
+    // }
 
     // if user isnt in redis means user have not been loggedin
     let userExist = await User.findOne({ email });
@@ -123,8 +127,8 @@ const loginUser = AsyncHandler(
       throw new ApiError(404, "Invalid Credintials!");
     }
 
-    if (userExist.isUserVerified === false) {
-      res
+   if (userExist.role === "teacher" && userExist.isUserVerified === false) {
+     return  res
         .status(403)
         .json(
           new ApiResponse(403, {}, "Please wait for approval of your account"),
@@ -168,13 +172,14 @@ const loginUser = AsyncHandler(
 
 const logoutUser = AsyncHandler(
   async (req: any, res: Response, next: NextFunction) => {
-    let user = req?.user;
-    let key = `user:${user?.email}`;
+    let {email} = req?.user
+ 
     let options = {
       httpOnly: true,
       secure: true,
     };
-
+    
+    let key = `user:${email}`;
     try {
       await client.del(key);
       res
@@ -215,7 +220,7 @@ const refreshAccessToken = AsyncHandler(
         "something went wrong when refreshing acces token please login again",
       );
     }
-    console.log(redisUser.refreshToken === incomingToken);
+    console.log('refreshtoken api is used');
 
     if (redisUser.refreshToken !== incomingToken) {
       throw new ApiError(404, "invalid refresh token");
@@ -332,9 +337,7 @@ const desktopLogout = AsyncHandler(
   async (req: any, res: Response, next: NextFunction) => {
     let { email } = req.user;
     console.log(email);
-
     let key = `desktopSession:${email}`;
-
     await client.del(key);
     res
       .status(200)
@@ -433,7 +436,7 @@ const resetPassword = AsyncHandler(async (req: any, res: Response) => {
     return res.status(400).json(new ApiResponse(400, {}, "Invalid OTP"));
   }
 
-  let user = await User.findById(data._id).lean();
+  let user = await User.findById(data._id);
   if (!user) {
     throw new ApiError(500, "Failed to reset the password , please try again");
   }
@@ -447,7 +450,7 @@ const resetPassword = AsyncHandler(async (req: any, res: Response) => {
 
 // in test submit functio we have to add the logic  of marks deduction
 // validate the location of studemt every 3 minuts
-
+// as user is loggn in web so we have to rmove the single login logiv
 export {
   createUser,
   loginUser,

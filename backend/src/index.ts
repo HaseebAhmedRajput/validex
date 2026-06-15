@@ -6,7 +6,7 @@ import  app  from "./app.js"
 import connectDB from "./db/mongoConfig.js";
 import { initAutoSubmitWorker } from "./utills/testAutoSubmit.js";
 
-const port = process.env.PORT || 8000
+const port = process.env.PORT ||4000
 connectDB()
 .then(()=>{
   app.listen(port,async ()=>{

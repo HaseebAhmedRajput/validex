@@ -59,3 +59,19 @@ iew attempts
 ❌ tab switch detection
 ❌ activity logs API
 ❌ cheating detection logic
+
+
+
+
+
+1.admin should also have option to create test and see the progress as the teacher had, and teaching approval function should check do teacher verified or not if teacher is verfied then shows it in list to approve or not,
+in admin panel there is a option"Verified Faculty" so i want when we click on it the list of verifed staff display on screen, and there is a option"institution deps" so when a admin or super admin click on it i want a group wise teacher list according to theier departments
+2.check the test details ui from teacher dahsbord , i think some error there coz i cant see the start time and end time, and location
+
+
+5. remove the desltop app completely and bounf this app to just validex web app wth these features, "
+a: tescher csn create test, see attendies, see specific student test detailx such as, questions , starttime , end time, location,  can see test created by himself, and all other reuired feautres thhat a onlne testing app should have orgazined faculty via department
+b: admin  have the same access of features as teacher, but in addition admin have more authorities,like approve(if not already approved) or remove teacher, see organzed teachers list like  option"Verified Faculty", 
+c: superAdmin  have the same access of features as admin, but in addition admin have more authorities,like make or remove admin
+d: studnent can login  and see thier attended test, can see specific attended test resutls, and should have a options 'join test' but when a user click on it the alert appears saying test can only be joined using validex desktop app
+"

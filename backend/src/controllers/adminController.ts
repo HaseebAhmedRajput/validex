@@ -10,7 +10,7 @@ import { confirmApproval } from "../utills/resendMailSend.js";
 
 const approveTeacher = AsyncHandler(async(req:any,res:Response)=>{
     let teacherId= req.params?.teacherId
-    let teacher = await User.findById({teacherId})
+    let teacher = await User.findById(teacherId)
     if(!teacher){ throw new ApiError(500, "something went wrong when finding the teacher") }
     teacher.isUserVerified= true
     await teacher.save()
@@ -21,7 +21,7 @@ const approveTeacher = AsyncHandler(async(req:any,res:Response)=>{
 
 const removeTeacher = AsyncHandler(async(req:any,res:Response)=>{
     let teacherId= req.params?.teacherId
-    let teacher = await User.findByIdAndDelete({teacherId})
+    let teacher = await User.findByIdAndDelete(teacherId)
     if(!teacher){ throw new ApiError(500, "something went wrong when finding the teacher") }
     res.status(200).json(new ApiResponse(200,{},`${teacher.fullname} has been Successfully removed as Teacher`))
 })
@@ -29,7 +29,7 @@ const removeTeacher = AsyncHandler(async(req:any,res:Response)=>{
 const adminRoleHandler = AsyncHandler(async(req:any,res:Response)=>{
   let role = "";
     let teacherId= req.params?.teacherId
-    let teacher = await User.findById({teacherId})
+    let teacher = await User.findById(teacherId)
     if(!teacher){ throw new ApiError(500, "something went wrong when finding the teacher") }
  
   if (teacher.role === "teacher") {
@@ -46,7 +46,7 @@ const adminRoleHandler = AsyncHandler(async(req:any,res:Response)=>{
 
 const  getTeachersList = AsyncHandler(async(req:Request,res:Response)=>{
 
-  let teacherList = await User.find({role:{$in:["admin", "teacher"]}}).select("_id fullname role email").lean()
+  let teacherList = await User.find({role:{$in:["admin", "teacher"]}}).select("_id fullname role email isUserVerified ").lean()
 
    res.status(200).json( new ApiResponse(200,teacherList,"Fetched All approved Teachers"))
 
@@ -75,3 +75,7 @@ const  getTeachersList = AsyncHandler(async(req:Request,res:Response)=>{
 export {
   approveTeacher,removeTeacher,adminRoleHandler,getTeachersList
 }
+
+
+
+// the start and endtme issue is still not resolved, and in admin dashbord i want list of staff in 2 portion such as verfied staff(all verfied stafff) and pendind staff(all unverifed staff waiting for appproval) you can check it by getTeacherList api it returns the list of teacher with detail including'isUserVerified' so make a logic according to this

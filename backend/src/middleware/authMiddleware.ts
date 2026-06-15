@@ -21,7 +21,7 @@ const isUserLoggedIn = AsyncHandler(async(req:any,res:Response,next:NextFunction
 
     // console.log(decodedToken);
     
-    let user = await User.findById(decodedToken?._id).select("-password")
+    let user = await User.findById(decodedToken?._id).select("-password").lean()
    
     
     req.user = user 

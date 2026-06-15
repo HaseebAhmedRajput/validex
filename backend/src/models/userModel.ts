@@ -52,7 +52,7 @@ const UserSchema = new Schema<Iuser>({
     batch:{
         type:String
     },
-    regNo: {type:String, unique: true},
+    regNo: {type:String, default:undefined},
     role: {
         type: String,
         enum: ["student","teacher", "admin","superAdmin"],
@@ -63,10 +63,7 @@ const UserSchema = new Schema<Iuser>({
         type: Boolean,
         default: false
     },
-    // isLoggedIn:{
-    //     type:Boolean,
-    //     default:false
-    // },
+ 
 
       
 }, {timestamps:true})
@@ -120,7 +117,16 @@ UserSchema.methods.generateRefreshToken=  function(this:Iuser):string{
 
     return refreshToken
 }
-
+UserSchema.index(
+  { regNo: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      role: "student",
+      regNo: { $type: "string" },
+    },
+  }
+);
 export const User = mongoose.model<Iuser>("User",UserSchema)
 
 

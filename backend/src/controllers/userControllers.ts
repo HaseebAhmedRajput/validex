@@ -9,9 +9,6 @@ import { sendMail } from "../utills/resendMailSend.js";
 import crypto from "crypto";
 import { Attempt } from "../models/testAttemptModel.js";
 import { Test } from "../models/testModel.js";
-// import { Question } from "../models/questionModel.js";
-// import { getMarks } from "../utills/geminiApi.js";
-// import type { attemptType } from "../schemas/testAttemptScehma.js";
 import { testSubmitHandler } from "../utills/processTest.js";
 import { LiveTimer } from "../models/liveTimerModel.js";
 import { getDistance } from "../utills/locationHandler.js";
@@ -68,7 +65,8 @@ const joinTest = AsyncHandler(
     let { testCode, lat, lng } = req.body;
     let { _id } = req.user;
   
-
+       
+       
     if (!testCode) {
       throw new ApiError(400, "Test code must required");
     }

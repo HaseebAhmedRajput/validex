@@ -7,7 +7,12 @@ let app = express()
 
 
 app.use(express.json({limit:"20kb"}))
-app.use(cors())
+app.use(cors({
+    origin: process.env.ORIGIN,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 app.use(cookieParser())
 app.use(express.urlencoded({extended:true,limit:"16kb"}))
 
@@ -22,10 +27,10 @@ import adminRouter from "./router/adminRoutes.js"
 
 
 //Routing api calls
-app.use("api/v1/users/",userRouter)
-app.use("api/v1/users/auth",authRouter)
-app.use("api/v1/teacher",teacherRouter)
-app.use("api/v1/admin",adminRouter)
+app.use("/api/v1/users/",userRouter)
+app.use("/api/v1/users/auth",authRouter)
+app.use("/api/v1/teacher",teacherRouter)
+app.use("/api/v1/admin",adminRouter)
 
 
 

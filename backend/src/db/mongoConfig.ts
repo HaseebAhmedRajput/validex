@@ -11,8 +11,8 @@ const connectDB  = async(): Promise<void> =>{
     if(!MongoURI || !DbName){ throw new Error(" There is an issue in readding env variable !")}
    try {
     
-    const connectionInstance = await mongoose.connect(`${MongoAtlasURI}`,{dbName:DbName});  
-    //  const connectionInstance = await mongoose.connect(`${MongoURI}/${DbName}?replicaSet=rs0`)
+    // const connectionInstance = await mongoose.connect(`${MongoAtlasURI}`,{dbName:DbName});  
+     const connectionInstance = await mongoose.connect(`${MongoURI}/${DbName}?replicaSet=rs0`)
      console.log(`Database is connected to the host :`, connectionInstance.connection.host);
      
    } catch (error: any) {
