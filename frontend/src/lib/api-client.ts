@@ -1,7 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
 
 import { ApiResponse, User, Test, Attempt, UserRole } from '../types';
 
